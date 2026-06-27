@@ -1,0 +1,53 @@
+name: Build YearCal APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Generate keystore
+        run: |
+          keytool -genkey -v \
+            -keystore keystore.jks \
+            -alias yearcal \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass android123 \
+            -keypass android123 \
+            -dname "CN=Ashvin, OU=Personal, O=YearCal, L=Kerala, ST=KL, C=IN"
+
+      - name: Build release APK
+        env:
+          KEYSTORE_PATH: ${{ github.workspace }}/keystore.jks
+          KEYSTORE_PASS: android123
+          KEY_ALIAS: yearcal
+          KEY_PASS: android123
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: YearCal-v2
+          path: app/build/outputs/apk/release/app-release.apk
+          retention-days: 30
