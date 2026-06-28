@@ -27,8 +27,8 @@ public class YearCalWidget extends AppWidgetProvider {
     // Anti-aliased circles picked up grey halos that made them look dim/bluish;
     // axis-aligned rectangles need no AA and render the colour as-is.
     private static final int COL_BG     = Color.rgb(18,  18,  20);
-    private static final int COL_FUTURE = Color.rgb(150, 149, 144);  // changed to warmer yellow tint
-    private static final int COL_WEEKEND = Color.rgb(77, 25, 0); // dull red
+    private static final int COL_FUTURE = Color.rgb(179, 179, 188);  // changed to brighter white
+    private static final int COL_WEEKEND = Color.rgb(169, 11, 0); // brighter red
     private static final int COL_PAST   = Color.rgb(48,  48,  52);
     private static final int COL_TODAY  = Color.rgb(210, 40,  40);
     private static final int COL_YEAR   = Color.rgb(195, 195, 200);
