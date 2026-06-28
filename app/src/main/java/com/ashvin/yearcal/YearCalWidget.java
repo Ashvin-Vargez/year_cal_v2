@@ -28,6 +28,7 @@ public class YearCalWidget extends AppWidgetProvider {
     // axis-aligned rectangles need no AA and render the colour as-is.
     private static final int COL_BG     = Color.rgb(18,  18,  20);
     private static final int COL_FUTURE = Color.rgb(185, 185, 188);  // pure white
+    private static final int COL_WEEKEND = Color.rgb(210, 160, 155);
     private static final int COL_PAST   = Color.rgb(48,  48,  52);
     private static final int COL_TODAY  = Color.rgb(210, 40,  40);
     private static final int COL_YEAR   = Color.rgb(195, 195, 200);
@@ -111,6 +112,7 @@ public class YearCalWidget extends AppWidgetProvider {
         // Dot paints — NO anti-aliasing: axis-aligned rectangles don't need it,
         // and disabling it means the colour renders with zero grey fringe → crisp white.
         Paint pFuture = new Paint(); pFuture.setColor(COL_FUTURE);
+        Paint pWeekend = new Paint(); pWeekend.setColor(COL_WEEKEND);
         Paint pPast   = new Paint(); pPast.setColor(COL_PAST);
         Paint pToday  = new Paint(); pToday.setColor(COL_TODAY);
 
@@ -143,12 +145,13 @@ public class YearCalWidget extends AppWidgetProvider {
                     float h = TODAY_HALF;
                     c.drawRect(cx - h, cy - h, cx + h, cy + h, pToday);
                 } else {
-                    // Round to integer to guarantee crisp pixel edges (no AA needed)
                     float h = SQ_HALF;
+                    boolean isWeekend = (weekday == 5 || weekday == 6); // Sat=5, Sun=6 in Mon-first scheme
+                    Paint dotPaint = isPast ? pPast : (isWeekend ? pWeekend : pFuture);
                     c.drawRect(
                         (float) Math.round(cx - h), (float) Math.round(cy - h),
                         (float) Math.round(cx + h), (float) Math.round(cy + h),
-                        isPast ? pPast : pFuture
+                        dotPaint
                     );
                 }
             }
